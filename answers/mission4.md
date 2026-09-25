@@ -27,7 +27,7 @@ Pick your **best** commit message and your **worst** one. Which of the 7 rules d
 
 PR link, inside your fork:
 
-> https://github.com/...
+> https://github.com/uzafar1203/New_Usman_Zafar_FALL26-ASSIG1/pull/1
 
 ## Creating value: the risk brief
 
