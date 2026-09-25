@@ -5,7 +5,7 @@
 Output of `npm run test:m1`, pasted or as a screenshot in `img/`:
 
 ```
-![test result](mission1.png)
+![test result](img/mission1/mission1.png)
 ```
 
 ## Connections: Python to JavaScript
