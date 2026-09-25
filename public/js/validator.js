@@ -31,7 +31,59 @@ const MAX_NAME_LENGTH = 64;
  *   - Any extra field in raw, for example isAdmin, must NOT appear in the returned object.
  */
 function normalizeService(raw) {
-  // TODO Mission 1
+
+  if (typeof raw !== "object") {
+    return null;
+  }
+
+  if (raw === null) {
+    return null;
+  }
+
+  if (Array.isArray(raw)) {
+    return null;
+  }
+
+  if (typeof raw.name !== "string") {
+    return null;
+  }
+
+  const name = raw.name.trim();
+
+  if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
+    return null;
+  }
+
+  if (typeof raw.status !== "string") {
+    return null;
+  }
+
+  if (!ALLOWED_STATUS.includes(raw.status)) {
+    return null;
+  }
+
+  if (typeof raw.online !== "boolean") {
+    return null;
+  }
+
+  if (typeof raw.latencyMs !== "number") {
+    return null;
+  }
+
+  if (!Number.isFinite(raw.latencyMs)) {
+    return null;
+  }
+
+  if (raw.latencyMs < 0) {
+    return null;
+  }
+
+  return {
+    name: name,
+    status: raw.status,
+    online: raw.online,
+    latencyMs: raw.latencyMs
+  };
 }
 
 /**
@@ -43,8 +95,63 @@ function normalizeService(raw) {
  * If the text is not valid JSON, or the parsed value has no "services" array, returns:
  *   { services: [], rejected: 0, error: "invalid report" }
  */
+
 function parseStatusReport(jsonText) {
-  // TODO Mission 1
+
+  let data;
+
+  try {
+    data = JSON.parse(jsonText);
+  } catch {
+    return {
+      services: [],
+      rejected: 0,
+      error: "invalid report"
+    };
+  }
+
+  if (typeof data !== "object") {
+    return {
+      services: [],
+      rejected: 0,
+      error: "invalid report"
+    };
+  }
+
+  if (data === null) {
+    return {
+      services: [],
+      rejected: 0,
+      error: "invalid report"
+    };
+  }
+
+  if (!Array.isArray(data.services)) {
+    return {
+      services: [],
+      rejected: 0,
+      error: "invalid report"
+    };
+  }
+
+  const services = [];
+  let rejected = 0;
+
+  for (const service of data.services) {
+    const normalized = normalizeService(service);
+
+    if (normalized === null) {
+      rejected = rejected + 1;
+    } else {
+      services.push(normalized);
+    }
+  }
+
+  return {
+    services: services,
+    rejected: rejected,
+    error: null
+  };
 }
 
 // Lets Node's require() see these functions. The browser simply ignores this block.
